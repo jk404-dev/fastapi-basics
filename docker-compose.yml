@@ -8,3 +8,16 @@ services:
     env_file:
       - .env
     restart: always    
+
+  postgres:
+    image: postgres:latest   
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_DB=fastapi-basics
+
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+
+volumes:        
+  postgres-db:
