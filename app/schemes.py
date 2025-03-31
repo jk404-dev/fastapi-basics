@@ -51,8 +51,7 @@ class PostWithVotes(PostBase):
     votes: int
     owner: UserOut 
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class PostList(BaseModel):
     posts: List[PostWithVotes]
