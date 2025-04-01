@@ -1,18 +1,7 @@
 import pytest
-from app.schemes import UserOut
-from .database import client, session
-
-@pytest.fixture
-def test_user(client):
-    user_data = {"email":"hello1237@gmail.com",
-                  "password":"password123"}
-    response = client.post("/users/", json=user_data)
-
-    new_user = response.json()
-    new_user["password"] = user_data["password"]
-    assert response.status_code == 201
-    return new_user
-
+from jose import jwt
+from app.schemes import UserOut, Token
+from app.config import settings
 
 def test_create_user(client):
     response = client.post("/users/", json={"email":"hello1237@gmail.com", "password":"password123"})
@@ -22,4 +11,19 @@ def test_create_user(client):
 
 def test_login_user(client, test_user):
     response = client.post("/login", data={"username":test_user["email"], "password":test_user["password"]})
+    login_data = Token(**response.json())
+    payload = jwt.decode(login_data.access_token, settings.secret_key, algorithms=[settings.algorithm])
+    id = payload.get("user_id")
+    assert id == test_user["id"]
+    assert login_data.token_type == "bearer"
     assert response.status_code == 200
+
+@pytest.mark.parametrize("email, password, status_code", [
+    ("wrongemail@gmail.com", "password123", 403),
+    ("hello1237@gmail.com", "wrongpassword", 403),
+    ("wrongemail@gmail.com", "wrongpassword", 403),
+])
+def test_incorrect_login(client, test_user, email, password, status_code):
+    response = client.post("/login", data={"username":email, "password":password})
+    assert response.status_code == status_code
+    assert response.json().get("detail") == "Invalid Credentials"
