@@ -18,7 +18,8 @@ dependencies = [
     "pytest (>=8.3.5,<9.0.0)",
 ]
 
-package-mode = false
+[tool.poetry]
+packages = [{include = "fastapi_basics", from = "app"}]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
