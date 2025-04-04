@@ -19,7 +19,7 @@ dependencies = [
 ]
 
 [tool.poetry]
-packages = [{include = "fastapi_basics", from = "app"}]
+packages = [{include = "fastapi_basics", from = "fastapi_basics"}]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
