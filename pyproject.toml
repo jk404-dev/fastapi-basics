@@ -19,7 +19,7 @@ dependencies = [
 ]
 
 [tool.poetry]
-packages = [{include = "fastapi_basics", from = "src"}]
+packages = [{include = "fastapi_basics"}]
 
 
 [build-system]
